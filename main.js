@@ -1,13 +1,17 @@
+let viewHeight = 200; // input height < 200px; defaults to 200px
+let frameCount = 15; // input frameCount
+let frameGutter = -86; // input frameGutter
+let frameWidth = 427;   // default 427
+
+viewHeight = putUnits(viewHeight);
+frameGutter = putUnits(frameGutter);
+
+// every frame -> 1920 x 1080 px
 
 window.onload = function() {
     // the sprite image
     let spriteObj = $("#card-hero");
-    
-    const frameGutter = 86;
-    // const frameWidth = -428-frameGutter;
-    // let backPos = -86;
-
-    console.log(spriteObj.css("background-position-x"));
+    spriteObj.css("height", viewHeight);
     
     // midpoint spriteObj -- use as origin
     const originNew = spriteObj[0].clientWidth;
@@ -16,23 +20,15 @@ window.onload = function() {
 
     spriteObj.on("mouseover", function(e){
         spriteObj.on("mousemove", function (event) {
-
-            // divide the range of Mouse offsetX into 12(=>frameNo) equal fragments
-            let mousePos = Math.trunc((event.offsetX/originNew) * 12); // total frames = 12
+            // divide the range of Mouse offsetX into number equal to frameCount 
+            let mousePos = Math.trunc((event.offsetX/originNew)*frameCount);
             
-
-            let multiplier = 6 - mousePos; // half of total frame number = 6;
-
-            if (multiplier == undefined || multiplier == 6) {
-                multiplier = 5;
+            if (mousePos >= frameCount) {
+                mousePos = 0;
             }
 
-            console.log(multiplier);
-
-            let newPos = initialPos + (multiplier * 427)  // framewidth = 427
-            let newPosCss = newPos + "px";
-            console.log(newPosCss);
-            spriteObj.css("background-position-x", newPosCss);
+            let newPos = putUnits(initialPos - (mousePos * frameWidth));  
+            spriteObj.css("background-position-x", newPos);
         
         })
     })
@@ -42,3 +38,7 @@ window.onload = function() {
     
 
 } // document load=======
+
+function putUnits(value) {
+    return value + "px"
+}
